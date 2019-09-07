@@ -1,0 +1,50 @@
+TODO
+
+KEY DECISIONS
+    - Decidir escopo do projeto (Classificacao binaria do Melanona?)
+    - Decidir se utilizo a base maior de 25k imagens
+    - Ler artigo do Dataset
+    - Submeter para nuvem grátis da Intel? FAZER UM DOCS da submissão + qualificação!
+    - Balanced accuracy score
+    - Transformar em escala de cinza e pegar centro de massa
+    - Criar estrutura para ver quais imagens o algoritmo acerta e quais ele erra
+
+AGORA
+	- Criar arquivo de constantes
+    - Ler docs Lime p/ entender os parâmetros da função
+    - Versionar o projeto no git
+    - Fazer código para carregar modelo + Código p/ interpretabilidade do modelo    
+    - Curso visão computacional
+    - Tentar rodar novamente como no código original pra ver se chego no mesmo resultado (posso estar trocando os labels dos dados que vem do disco vs memória)
+
+FUTURO
+    - Perguntar no Forum como testar o modelo no dataset que eles guardaram
+    - Testar novos transfer learnings
+    - When using Densenet-121, the average (weighted average?? This may be wrong) accuracy of 7 classes on the validation set can reach 92% in 10 epochs
+    - Fazer robô para rodar no Colab (manter janela ativa)
+    - Fazer a minha rede na mão (keras sequence)
+    - Aplicativo React Native
+
+DONE
+- Fazer um baseline baseado em modelos simples e imagens 28x28 RGB e escala de cinza
+
+
+FELIPE LODUR
+    - Precisao e recall por classe
+    - Resize with padding
+    - 2 ou 3 densas
+    - Learning curve: Variando um parâmetro
+    - VGG, Inception, ResNet
+    - Separar 3 imagens de cada classe p/ o Lime (acerta c/ certeza, + ou -, erra muito)
+    - Estudar mais sobre interpretabilidade, outros pacotes, c
+    - Formatos de imagens HSV -> Qual a melhor representação para imagens?
+    - 1) Modelo / 2) Interpretabilidade / 3) fomato imagem / 4) Imagens críticas: Interpretabilidade, semelahança a priori, prob a posteriori. 
+    - Embedding imagem (Pode usar os pesos do bottle neck do Auto encoder). Reconstruir a imagem sozinha ou com idade, etc.
+    - Cluster de interpretacoes.
+
+felipe@lodur.com.br
+(31) 99290-8194
+
+
+
+

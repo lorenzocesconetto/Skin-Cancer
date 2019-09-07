@@ -1,0 +1,26 @@
+Experimento 1: 'mobile_net_v0_{val_acc:.2f}.h5'
+    - Imagem: 224 x 224
+    - 0.8 Treino e 0.2 Teste
+    - (Nao tenho certeza se foi feto) Feito data augmentation offline com 1.000 imagens
+    - on the fly mobilenet.preprocess_input
+    - MobileNet[:-6] + Dropout(0.25) + Dense(7)
+    - Ultimas 23 camadas treináveis -> model.layers[:-23] layer.trainable = False
+    - batch_size = 10
+    - optimizer = optimizers.RMSprop(lr=0.001)
+    - epochs = 10 + 1 (erro primeira tentativa mas mantive os pesos)
+    - Validação feita no teste
+    - ReduceLROnPlateau: factor=0.95, patience=2, min_lr=0.0001
+    
+Experimento 2: 'mobile_net_v1_{val_acc:.2f}.h5'
+    - Imagem: 224 x 224
+    - 0.7 Treino / 0.15 Teste / 0.15 Validação
+    - Treino vindo do disco + Validação toda na memória
+    - Feito data augmentation offline com 1.000 imagens
+    - on the fly mobilenet.preprocess_input
+    - MobileNet[:-6] + Dropout(0.25) + Dense(7)
+    - Ultimas 11 camadas treináveis -> model.layers[:-9] layer.trainable = False
+    - batch_size = 10
+    - optimizer = optimizers.RMSprop(lr=0.001)
+    - epochs = 10
+    - ReduceLROnPlateau: factor=0.95, patience=2, min_lr=0.0001
+
