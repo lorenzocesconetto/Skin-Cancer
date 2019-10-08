@@ -41,3 +41,12 @@ FELIPE LODUR
 felipe@lodur.com.br
 (31) 99290-8194
 
+
+
+- VERRI
+    - Entender Lime no detalhe.
+    - Lime com múltiplas imagens (com interpretar).
+    - Link com trabalho anterior.
+    - Passar uma função.
+    - Fazer uma funcao que pre-processa e faz o predict e passar essa para o Lime.
+
