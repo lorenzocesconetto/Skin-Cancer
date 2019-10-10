@@ -7,15 +7,16 @@ import os
 # Data Paths
 DATA_ORIGINAL_DIR = 'data_original'
 DATA_PROCESSED_DIR = 'data_processed'
+NEW_DATA_DIR = 'ISIC-2019'
 DATA_PROCESSED_DIR_PATH = os.path.join('..', DATA_PROCESSED_DIR)
 DATA_ORIGINAL_DIR_PATH = os.path.join('..', DATA_ORIGINAL_DIR)
+NEW_DATA_DIR_PATH = os.path.join('..', NEW_DATA_DIR)
 
 # Splits
 SPLIT_DIRS = ['train', 'test', 'validation']
 TRAIN_PATH = os.path.join(DATA_PROCESSED_DIR_PATH, SPLIT_DIRS[0])
 TEST_PATH = os.path.join(DATA_PROCESSED_DIR_PATH, SPLIT_DIRS[1])
 VAL_PATH = os.path.join(DATA_PROCESSED_DIR_PATH, SPLIT_DIRS[2])
-
 
 ################################
 # Data
@@ -26,6 +27,7 @@ VAL_PATH = os.path.join(DATA_PROCESSED_DIR_PATH, SPLIT_DIRS[2])
 # SORTED_NUMERIC_CLASSES, SORTED_DIAGNOSTIC_CLASSES = (list(t) for t in zip(*sorted(zip(NUMERIC_CLASSES, DIAGNOSTIC_CLASSES))))
 
 DIAGNOSTIC_CLASSES = ['akiec', 'bcc', 'bkl', 'df', 'nv', 'vasc', 'mel']
+BINARY_CLASSES = ['other', 'mel']
 NUMERIC_CLASSES = [0, 1, 2, 3, 4, 5, 6]
 DIAG_2_NUM = {x: y for x, y in zip(DIAGNOSTIC_CLASSES, NUMERIC_CLASSES)}
 NUM_2_DIAG = {x: y for x, y in zip(NUMERIC_CLASSES, DIAGNOSTIC_CLASSES)}

@@ -1,11 +1,10 @@
 TODO
 
 KEY DECISIONS
-    - Balanced accuracy score
-    - Transformar em escala de cinza e pegar centro de massa
     - Criar estrutura para ver quais imagens o algoritmo acerta e quais ele erra
 
 AGORA
+    - Código para pegar melanoma da outra base
     - Ler docs Lime p/ entender os parâmetros da função
     - Curso visão computacional
     - Testar novos transfer learnings
@@ -42,11 +41,17 @@ felipe@lodur.com.br
 (31) 99290-8194
 
 
-
 - VERRI
     - Entender Lime no detalhe.
-    - Lime com múltiplas imagens (com interpretar).
+    - Lime com múltiplas imagens (como interpretar).
     - Link com trabalho anterior.
     - Passar uma função.
     - Fazer uma funcao que pre-processa e faz o predict e passar essa para o Lime.
+
+
+IDEIAS DEIXADAS DE LADO
+    - Balanced accuracy score
+    - Transformar em escala de cinza e pegar centro de massa
+
+
 
