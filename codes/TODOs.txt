@@ -1,16 +1,24 @@
 TODO
 
-KEY DECISIONS
-    - Criar estrutura para ver quais imagens o algoritmo acerta e quais ele erra
+http://digital-thinking.de/keras-how-to-snapshot-your-model-after-x-epochs-based-on-custom-metrics-like-auc/
+https://stackoverflow.com/questions/41032551/how-to-compute-receiving-operating-characteristic-roc-and-auc-in-keras
+
+
+PARAMETROS
+    - Numero de imagens Augmentation
+    - Learning rate inicial e decaimento
+    - Salvar melhor AUC
+    - Numero de épocas (50)
 
 AGORA
-    - Código para pegar melanoma da outra base
+    - Salvar gráfico
+    - Verificar doenças que se confundem com melanoma
+    - Ordenar lista de imagens pelo score
     - Ler docs Lime p/ entender os parâmetros da função
     - Curso visão computacional
-    - Testar novos transfer learnings
     - When using Densenet-121, the average (weighted average?? This may be wrong) accuracy of 7 classes on the validation set can reach 92% in 10 epochs
     - Fazer a minha rede na mão (keras sequence)
-    - Aplicativo React Native
+    - Aplicativo Web
     - Testar pré-processamento de deixar somente a pinta (zerar todos os demais pixels).
     - Testar pré-processamento para bordas.
 
@@ -24,6 +32,11 @@ DONE
     - Criar arquivo de constantes
     - Resize with padding
     - Fazer código para carregar modelo + Código p/ interpretabilidade do modelo
+    - Mudar para classificacao binaria
+    - Código para pegar melanoma da outra base
+    - Criar estrutura para ver quais imagens o algoritmo acerta e quais ele erra
+    - Computar AUC
+    - Fazer Transfer-Learning com VGG e ResNet
 
 FELIPE LODUR
     - OK: Resize with padding
@@ -47,11 +60,6 @@ felipe@lodur.com.br
     - Link com trabalho anterior.
     - Passar uma função.
     - Fazer uma funcao que pre-processa e faz o predict e passar essa para o Lime.
-
-
-IDEIAS DEIXADAS DE LADO
-    - Balanced accuracy score
-    - Transformar em escala de cinza e pegar centro de massa
 
 
 
