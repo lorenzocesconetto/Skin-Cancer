@@ -1,0 +1,7 @@
+ifconfig | grep inet
+
+inet 10.215.4.54 netmask 0xffffe000 broadcast 10.215.31.255
+
+flask run --host=0.0.0.0
+
+

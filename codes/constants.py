@@ -32,7 +32,11 @@ NUMERIC_CLASSES = [0, 1, 2, 3, 4, 5, 6]
 DIAG_2_NUM = {x: y for x, y in zip(DIAGNOSTIC_CLASSES, NUMERIC_CLASSES)}
 NUM_2_DIAG = {x: y for x, y in zip(NUMERIC_CLASSES, DIAGNOSTIC_CLASSES)}
 
+# New data - ISIC 2019
+CLASSES_2019 = ['ak', 'bcc', 'bkl', 'df', 'nv', 'vasc', 'mel', 'scc']
+
 # Image format
 IMG_FORMAT = 'jpg'
+
 
 

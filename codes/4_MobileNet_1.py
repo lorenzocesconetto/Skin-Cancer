@@ -55,42 +55,17 @@ from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCh
 from tensorflow.keras import optimizers
 from tensorflow.keras.metrics import top_k_categorical_accuracy
 from keras.utils.np_utils import to_categorical
+
 # Sklearn
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import roc_auc_score
 
 
-# ### 3. Create model + Data Augmentation on the fly
+# ### 3. Load Data
 
-# #### 3.1 Set version to avoid overwirting previous files
+# #### 3.1 Load all train images to memory
 
 # In[4]:
-
-
-# Set version to avoid overwirting previous files
-base_name = 'mobile_net_v'
-version = 0
-while any([bool(re.match(base_name + str(version), x)) for x in os.listdir('.')]):
-    version += 1
-print('version', version)
-
-
-# #### 3.2 Model Constants
-
-# In[5]:
-
-
-# Constants
-TRAIN_BATCH_SIZE = 32
-IMAGE_SIZE = 224
-NUM_EPOCHS = 10
-
-num_train_samples = len(glob.glob(os.path.join(TRAIN_PATH, '*', '*.' + IMG_FORMAT)))
-train_steps = np.ceil(num_train_samples / TRAIN_BATCH_SIZE)
-
-
-# #### 3.4 Load all train images from disk to memory
-
-# In[6]:
 
 
 X_train = []
@@ -104,30 +79,11 @@ for cls in BINARY_CLASSES:
     y_train = y_train + [(1 if cls == 'mel' else 0)] * counter
 
 X_train = np.array(X_train)
-# y_train = to_categorical(np.array(y_train).reshape(-1, 1))
 
 
-# In[7]:
+# #### 3.2 Load all validation images to memory
 
-
-# # Data flow
-# datagen = ImageDataGenerator(preprocessing_function = \
-#                              tensorflow.keras.applications.mobilenet.preprocess_input)
-
-# train_flow = datagen.flow_from_directory(train_path,
-#                                          target_size=(image_size, image_size),
-#                                          batch_size=train_batch_size)
-
-
-# In[8]:
-
-
-# train_flow.class_indices
-
-
-# #### 3.5 Load validation image to memory
-
-# In[7]:
+# In[5]:
 
 
 X_val = []
@@ -141,32 +97,52 @@ for cls in BINARY_CLASSES:
     y_val = y_val + [(1 if cls == 'mel' else 0)] * counter
 
 X_val = np.array(X_val)
-# y_val = to_categorical(np.array(y_val).reshape(-1, 1))
 
+
+# ### 4. Create model
+
+# #### 4.1 Set version to avoid overwriting previous files
+
+# In[6]:
+
+
+# Set version to avoid overwirting previous files
+base_name = 'mobile_net_v'
+version = 0
+while any([bool(re.match(base_name + str(version), x)) for x in os.listdir('.')]):
+    version += 1
+print('version', version)
+
+
+# #### 4.2 Model Constants
+
+# In[7]:
+
+
+# Constants
+TRAIN_BATCH_SIZE = 32
+IMAGE_SIZE = 224
+NUM_EPOCHS = 50
+
+num_train_samples = len(glob.glob(os.path.join(TRAIN_PATH, '*', '*.' + IMG_FORMAT)))
+train_steps = np.ceil(num_train_samples / TRAIN_BATCH_SIZE)
+
+
+# #### 4.3 Transfer Learning MobileNet
 
 # In[8]:
-
-
-# _ = plt.imshow(X_val[1090])
-
-
-# #### 3.3 Transfer Learning MobileNet
-
-# In[9]:
 
 
 # Load MobileNet
 mobile = tensorflow.keras.applications.mobilenet.MobileNet()
 
 
-# In[10]:
+# In[9]:
 
 
 # Set architecture
 x = mobile.layers[-6].output
 
-# x = Dropout(0.4)(x)
-# x = Dense(1024, activation='tanh')(x)
 x = Dropout(0.5)(x)
 x = BatchNormalization()(x)
 x = Dense(1024, activation='tanh')(x)
@@ -177,52 +153,61 @@ predictions = Dense(1, activation='sigmoid')(x)
 model = Model(inputs=mobile.input, outputs=predictions)
 
 
-# In[11]:
+# In[10]:
 
 
 model.summary()
 
 
+# In[10]:
+
+
+# Freeze layers
+for layer in model.layers:
+    layer.trainable = False
+    if layer.name == 'conv_pw_11_relu':
+        break
+
+
+# #### 4.5 Callbacks and metrics
+
+# In[11]:
+
+
+def rocauc(y_true, y_pred):
+    return tensorflow.py_func(roc_auc_score, (y_true, y_pred), tensorflow.double)
+
+
 # In[12]:
 
 
-# Leave only the last 11 layers trainable.
-# 1 drop + 1 dense: 22, 16, 9
-# 2 drop + 2 dense: 11, 18
-# 3 drop + 3 dense: 13
-# 2 drop + 2 BatchNormalization + 2 dense: 20
-
-for layer in model.layers[:-20]:
-    layer.trainable = False
+model.compile(optimizer=optimizers.SGD(lr=0.001, nesterov=True), 
+              loss='binary_crossentropy', metrics=['accuracy', rocauc])
 
 
 # In[13]:
 
 
-# name, name_scope
-# dir(model.layers[-22])
-model.layers[-20].name
-
-
-# In[14]:
-
-
-model.compile(optimizer=optimizers.SGD(lr=0.001, nesterov=True), 
-              loss='binary_crossentropy', metrics=['accuracy'])
-
-
-# #### 3.6 Train Model
-
-# In[15]:
-
-
-checkpoint = ModelCheckpoint(base_name + str(version) + '_{val_acc:.2f}.h5', monitor='val_acc', verbose=1, 
+checkpoint = ModelCheckpoint(base_name + str(version) + '_rocauc_{val_rocauc:.3f}.h5', 
+                             monitor='val_rocauc', mode='max', verbose=1, 
                              save_best_only=True, save_weights_only=False)
 
-reduce_lr = ReduceLROnPlateau(monitor='val_acc', factor=0.9, patience=2,
+reduce_lr = ReduceLROnPlateau(monitor='val_rocauc', factor=0.8, patience=6,
                                    verbose=1, mode='max', min_lr=0.0001, cooldown=2)
                               
 callbacks_list = [checkpoint, reduce_lr]
+
+
+# #### 4.6 Train Model
+
+# In[16]:
+
+
+# X_train.shape
+# len(y_train)
+
+# X_val.shape
+# len(y_val)
 
 
 # In[17]:
@@ -252,38 +237,25 @@ _ = plt.xlabel("# Época")
 _ = plt.ylabel("Erro & Acurácia")
 _ = plt.legend(loc="upper right")
 
-plt.savefig(base_name + str(version) + '.png')
+plt.savefig(base_name + str(version) + '_learning' + '.png')
 
 
 # ### 3.7 Confusion matrix
 
-# In[ ]:
+# In[75]:
 
 
 probas = model.predict(X_val)
-classes = np.argmax(probas, axis=1)
 
 
-# In[37]:
+# In[83]:
 
 
-cm = confusion_matrix(y_true=np.argmax(y_val, axis=1), y_pred=classes , labels=NUMERIC_CLASSES)
+cm = confusion_matrix(y_true=y_val, y_pred=np.array(probas > 0.5, dtype=np.int32).flatten())
 
-df_cm = pd.DataFrame(cm, index=NUMERIC_CLASSES)
-_ = plt.figure(figsize = (10,7))
-_ = sn.heatmap(df_cm, annot=True)
+df_cm = pd.DataFrame(cm)
+_ = plt.figure(figsize = (10, 7))
+_ = sn.heatmap(df_cm, annot=True, fmt='d')
 
 plt.savefig(base_name + str(version) + '_confusion_matrix.png')
-
-
-# In[25]:
-
-
-
-
-
-# In[ ]:
-
-
-
 

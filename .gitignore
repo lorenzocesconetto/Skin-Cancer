@@ -1,5 +1,7 @@
 *
 !codes
 !codes/*
+!application
+!application/*
 !.gitignore
 *.DS_Store
