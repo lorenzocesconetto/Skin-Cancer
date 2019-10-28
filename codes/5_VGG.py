@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# # Notebook 4.1 - MobileNet v1
+# # Notebook 4.1 - VGG
 
 # ### 1. Setup constants
 
@@ -51,14 +51,14 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.metrics import categorical_crossentropy
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import Model
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
+from tensorflow.keras.callbacks import Callback, EarlyStopping, ReduceLROnPlateau, ModelCheckpoint
 from tensorflow.keras import optimizers
 from tensorflow.keras.metrics import top_k_categorical_accuracy
-from keras.utils.np_utils import to_categorical
 
 # Sklearn
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import roc_auc_score
+from sklearn.utils import class_weight
 
 
 # ### 3. Load Data
@@ -75,7 +75,7 @@ for cls in BINARY_CLASSES:
     counter = 0
     for img in glob.glob(os.path.join(TRAIN_PATH, cls, '*.' + IMG_FORMAT)):
         counter += 1
-        X_train.append(tensorflow.keras.applications.mobilenet.preprocess_input(plt.imread(img)))
+        X_train.append(tensorflow.keras.applications.vgg16.preprocess_input(plt.imread(img)))
     y_train = y_train + [(1 if cls == 'mel' else 0)] * counter
 
 X_train = np.array(X_train)
@@ -93,7 +93,7 @@ for cls in BINARY_CLASSES:
     counter = 0
     for img in glob.glob(os.path.join(VAL_PATH, cls, '*.' + IMG_FORMAT)):
         counter += 1
-        X_val.append(tensorflow.keras.applications.mobilenet.preprocess_input(plt.imread(img)))
+        X_val.append(tensorflow.keras.applications.vgg16.preprocess_input(plt.imread(img)))
     y_val = y_val + [(1 if cls == 'mel' else 0)] * counter
 
 X_val = np.array(X_val)
@@ -103,11 +103,11 @@ X_val = np.array(X_val)
 
 # #### 4.1 Set version to avoid overwriting previous files
 
-# In[6]:
+# In[4]:
 
 
 # Set version to avoid overwirting previous files
-base_name = 'mobile_net_v'
+base_name = 'VGG_v'
 version = 0
 while any([bool(re.match(base_name + str(version), x)) for x in os.listdir('.')]):
     version += 1
@@ -116,111 +116,127 @@ print('version', version)
 
 # #### 4.2 Model Constants
 
-# In[7]:
+# In[5]:
 
 
 # Constants
-TRAIN_BATCH_SIZE = 32
+TRAIN_BATCH_SIZE = 64
 IMAGE_SIZE = 224
-NUM_EPOCHS = 50
+NUM_EPOCHS = 70
 
 num_train_samples = len(glob.glob(os.path.join(TRAIN_PATH, '*', '*.' + IMG_FORMAT)))
 train_steps = np.ceil(num_train_samples / TRAIN_BATCH_SIZE)
 
 
-# #### 4.3 Transfer Learning MobileNet
+# #### 4.3 Transfer Learning VGG
 
-# In[8]:
-
-
-# Load MobileNet
-mobile = tensorflow.keras.applications.mobilenet.MobileNet()
+# In[6]:
 
 
-# In[9]:
+# Load VGG
+vgg = tensorflow.keras.applications.vgg16.VGG16()
+
+
+# In[5]:
+
+
+# vgg.summary()
+
+
+# In[7]:
 
 
 # Set architecture
-x = mobile.layers[-6].output
+x = vgg.layers[-4].output
 
 x = Dropout(0.5)(x)
 x = BatchNormalization()(x)
-x = Dense(1024, activation='tanh')(x)
+x = Dense(1500, activation='tanh')(x)
+
+x = Dropout(0.5)(x)
+x = BatchNormalization()(x)
+x = Dense(100, activation='tanh')(x)
+
 x = Dropout(0.5)(x)
 x = BatchNormalization()(x)
 predictions = Dense(1, activation='sigmoid')(x)
 
-model = Model(inputs=mobile.input, outputs=predictions)
+model = Model(inputs=vgg.input, outputs=predictions)
 
 
-# In[10]:
-
-
-model.summary()
-
-
-# In[10]:
+# In[8]:
 
 
 # Freeze layers
 for layer in model.layers:
     layer.trainable = False
-    if layer.name == 'conv_pw_11_relu':
+    if layer.name == 'block3_pool':
         break
+
+
+# In[28]:
+
+
+# model.summary()
 
 
 # #### 4.5 Callbacks and metrics
 
-# In[11]:
+# In[9]:
 
 
-def rocauc(y_true, y_pred):
-    return tensorflow.py_func(roc_auc_score, (y_true, y_pred), tensorflow.double)
+model.compile(optimizer=optimizers.Adam(),
+              loss='binary_crossentropy', metrics=['accuracy', tensorflow.keras.metrics.AUC(name='auc')])
 
 
-# In[12]:
+# In[10]:
 
 
-model.compile(optimizer=optimizers.SGD(lr=0.001, nesterov=True), 
-              loss='binary_crossentropy', metrics=['accuracy', rocauc])
-
-
-# In[13]:
-
-
-checkpoint = ModelCheckpoint(base_name + str(version) + '_rocauc_{val_rocauc:.3f}.h5', 
-                             monitor='val_rocauc', mode='max', verbose=1, 
+checkpoint = ModelCheckpoint(base_name + str(version) + '_auc_{val_auc:.3f}.h5', 
+                             monitor='val_auc', mode='max', verbose=1,
                              save_best_only=True, save_weights_only=False)
 
-reduce_lr = ReduceLROnPlateau(monitor='val_rocauc', factor=0.8, patience=6,
-                                   verbose=1, mode='max', min_lr=0.0001, cooldown=2)
+reduce_lr = ReduceLROnPlateau(monitor='val_auc', factor=0.8, patience=5,
+                                   verbose=1, mode='max', min_lr=0.0002, cooldown=2)
                               
 callbacks_list = [checkpoint, reduce_lr]
 
 
 # #### 4.6 Train Model
 
-# In[16]:
-
-
-# X_train.shape
-# len(y_train)
-
-# X_val.shape
-# len(y_val)
-
-
 # In[17]:
 
 
-history = model.fit(x=X_train,
-                    y=y_train,
-                    batch_size=TRAIN_BATCH_SIZE,
-                    epochs=NUM_EPOCHS,
-                    verbose=1,
-                    callbacks=callbacks_list,
-                    validation_data=(X_val, y_val)
-                   )
+datagen = ImageDataGenerator(
+    rotation_range=180,
+    width_shift_range=0.1,
+    height_shift_range=0.1,
+#     zoom_range=0.1,
+    horizontal_flip=True,
+    vertical_flip=True,
+    fill_mode='constant',
+    cval=0
+)
+
+
+# In[18]:
+
+
+weights = class_weight.compute_class_weight('balanced', np.unique(y_train), y_train)
+total = weights[0] + weights[1]
+class_weights = {0: weights[0] / total, 1: weights[1] / total}
+class_weights
+
+
+# In[20]:
+
+
+history = model.fit_generator(datagen.flow(X_train, np.array(y_train), batch_size=TRAIN_BATCH_SIZE),
+                              epochs=NUM_EPOCHS,
+                              verbose=1,
+                              callbacks=callbacks_list,
+                              validation_data=(X_val, np.array(y_val)),
+                              class_weight=class_weights)
 
 
 # In[19]:
