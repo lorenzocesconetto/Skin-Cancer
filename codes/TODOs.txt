@@ -1,45 +1,30 @@
 TODO
 
-http://digital-thinking.de/keras-how-to-snapshot-your-model-after-x-epochs-based-on-custom-metrics-like-auc/
-https://stackoverflow.com/questions/41032551/how-to-compute-receiving-operating-characteristic-roc-and-auc-in-keras
+FELIPE LODUR 2:
+    - Tentar Cyclical Learning rate.
+    - Comparar Lime e LRP.
+    - Identificar interpretabildiade com casos que acerta, erra, fica na dúvida.
+    - Sem Augmentation vs com Augmentation: Bump de AUC e qualidade interpretabilidade.
 
 
-PARAMETROS
-    - Numero de imagens Augmentation
-    - Learning rate inicial e decaimento
-    - Salvar melhor AUC
-    - Numero de épocas (50)
-
-AGORA
-    - Salvar gráfico
+AGORA:
+	- Verificar o que o history = model.fit() está me retornando
+	- Rerodar modelos garantindo mesma metodologia
+    - + 90% AUC (cyclical learning rate)
     - Verificar doenças que se confundem com melanoma
-    - Ordenar lista de imagens pelo score
-    - Ler docs Lime p/ entender os parâmetros da função
-    - Curso visão computacional
-    - When using Densenet-121, the average (weighted average?? This may be wrong) accuracy of 7 classes on the validation set can reach 92% in 10 epochs
-    - Fazer a minha rede na mão (keras sequence)
-    - Aplicativo Web
-    - Testar pré-processamento de deixar somente a pinta (zerar todos os demais pixels).
-    - Testar pré-processamento para bordas.
+    - SpRaY
+    - Write article
+    - Launch on Heroku
 
-DONE
-    - Fazer um baseline baseado em modelos simples e imagens 28x28 RGB e escala de cinza
-    - Lido artigo dataset (description)
-    - Feito Doc Intel
-    - Feito Doc dataset
-    - Decidido classificacao binaria
-    - Versionar o projeto no Git / GitHub
-    - Criar arquivo de constantes
-    - Resize with padding
-    - Fazer código para carregar modelo + Código p/ interpretabilidade do modelo
-    - Mudar para classificacao binaria
-    - Código para pegar melanoma da outra base
-    - Criar estrutura para ver quais imagens o algoritmo acerta e quais ele erra
-    - Computar AUC
-    - Fazer Transfer-Learning com VGG e ResNet
+
+MAYBE:
+    - Fazer a minha rede na mão (keras sequence)
+    - Testar pré-processamento de deixar somente a pinta (zerar todos os demais pixels)
+    - Testar pré-processamento para bordas
+    - Slider para o threshold fazendo uma linha vertical e uma horizontal p/ ver TPR e FPR
+
 
 FELIPE LODUR
-    - OK: Resize with padding
     - 2 ou 3 densas
     - Learning curve: Variando um parâmetro
     - VGG, Inception, ResNet
@@ -50,9 +35,6 @@ FELIPE LODUR
     - Embedding imagem (Pode usar os pesos do bottle neck do Auto encoder). Reconstruir a imagem sozinha ou com idade, etc.
     - Cluster de interpretacoes.
 
-felipe@lodur.com.br
-(31) 99290-8194
-
 
 - VERRI
     - Entender Lime no detalhe.
@@ -62,4 +44,6 @@ felipe@lodur.com.br
     - Fazer uma funcao que pre-processa e faz o predict e passar essa para o Lime.
 
 
+felipe@lodur.com.br
+(31) 99290-8194
 

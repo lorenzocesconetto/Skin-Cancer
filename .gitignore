@@ -5,3 +5,5 @@
 !application/*
 !.gitignore
 *.DS_Store
+*.h5
+application/*.h5
