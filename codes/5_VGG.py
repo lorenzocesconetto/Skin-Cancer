@@ -103,7 +103,7 @@ X_val = np.array(X_val)
 
 # #### 4.1 Set version to avoid overwriting previous files
 
-# In[4]:
+# In[6]:
 
 
 # Set version to avoid overwirting previous files
@@ -116,13 +116,13 @@ print('version', version)
 
 # #### 4.2 Model Constants
 
-# In[5]:
+# In[22]:
 
 
 # Constants
 TRAIN_BATCH_SIZE = 64
 IMAGE_SIZE = 224
-NUM_EPOCHS = 70
+NUM_EPOCHS = 40
 
 num_train_samples = len(glob.glob(os.path.join(TRAIN_PATH, '*', '*.' + IMG_FORMAT)))
 train_steps = np.ceil(num_train_samples / TRAIN_BATCH_SIZE)
@@ -130,20 +130,20 @@ train_steps = np.ceil(num_train_samples / TRAIN_BATCH_SIZE)
 
 # #### 4.3 Transfer Learning VGG
 
-# In[6]:
+# In[23]:
 
 
 # Load VGG
 vgg = tensorflow.keras.applications.vgg16.VGG16()
 
 
-# In[5]:
+# In[24]:
 
 
 # vgg.summary()
 
 
-# In[7]:
+# In[25]:
 
 
 # Set architecture
@@ -151,11 +151,11 @@ x = vgg.layers[-4].output
 
 x = Dropout(0.5)(x)
 x = BatchNormalization()(x)
-x = Dense(1500, activation='tanh')(x)
+x = Dense(1000, activation='tanh')(x)
 
-x = Dropout(0.5)(x)
-x = BatchNormalization()(x)
-x = Dense(100, activation='tanh')(x)
+# x = Dropout(0.5)(x)
+# x = BatchNormalization()(x)
+# x = Dense(100, activation='tanh')(x)
 
 x = Dropout(0.5)(x)
 x = BatchNormalization()(x)
@@ -164,7 +164,7 @@ predictions = Dense(1, activation='sigmoid')(x)
 model = Model(inputs=vgg.input, outputs=predictions)
 
 
-# In[8]:
+# In[26]:
 
 
 # Freeze layers
@@ -174,7 +174,7 @@ for layer in model.layers:
         break
 
 
-# In[28]:
+# In[27]:
 
 
 # model.summary()
@@ -182,14 +182,14 @@ for layer in model.layers:
 
 # #### 4.5 Callbacks and metrics
 
-# In[9]:
+# In[28]:
 
 
 model.compile(optimizer=optimizers.Adam(),
               loss='binary_crossentropy', metrics=['accuracy', tensorflow.keras.metrics.AUC(name='auc')])
 
 
-# In[10]:
+# In[29]:
 
 
 checkpoint = ModelCheckpoint(base_name + str(version) + '_auc_{val_auc:.3f}.h5', 
@@ -204,7 +204,7 @@ callbacks_list = [checkpoint, reduce_lr]
 
 # #### 4.6 Train Model
 
-# In[17]:
+# In[30]:
 
 
 datagen = ImageDataGenerator(
@@ -219,7 +219,7 @@ datagen = ImageDataGenerator(
 )
 
 
-# In[18]:
+# In[17]:
 
 
 weights = class_weight.compute_class_weight('balanced', np.unique(y_train), y_train)
