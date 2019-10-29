@@ -8,6 +8,9 @@ FELIPE LODUR 2:
 
 
 AGORA:
+    - Include shape: (768, 1024, 3)
+    - Ou remover: (680, 1024, 3)
+        - Already: (450, 600, 3), (1024, 1024, 3), (680, 1024, 3)
 	- Verificar o que o history = model.fit() está me retornando
 	- Rerodar modelos garantindo mesma metodologia
     - + 90% AUC (cyclical learning rate)
