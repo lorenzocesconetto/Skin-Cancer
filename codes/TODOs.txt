@@ -8,19 +8,25 @@ FELIPE LODUR 2:
 
 
 AGORA:
+    - Mesmo número de imagens para cada doença para cada shape.
+    - Testar deformando imagem com resize
+    
+    - VGG_v8: (450, 600, 3), (1024, 1024, 3), (680, 1024, 3)
     - Include shape: (768, 1024, 3)
-    - Ou remover: (680, 1024, 3)
-        - Already: (450, 600, 3), (1024, 1024, 3), (680, 1024, 3)
-	- Verificar o que o history = model.fit() está me retornando
-	- Rerodar modelos garantindo mesma metodologia
-    - + 90% AUC (cyclical learning rate)
+    - Keep only: (450, 600, 3), (1024, 1024, 3)
     - Verificar doenças que se confundem com melanoma
-    - SpRaY
     - Write article
     - Launch on Heroku
 
 
+DONE:
+    - Verificar o que o history = model.fit() está me retornando
+    
+    
 MAYBE:
+    - SpRaY
+    - + 90% AUC (cyclical learning rate)
+    - Rerodar modelos garantindo mesma metodologia
     - Fazer a minha rede na mão (keras sequence)
     - Testar pré-processamento de deixar somente a pinta (zerar todos os demais pixels)
     - Testar pré-processamento para bordas

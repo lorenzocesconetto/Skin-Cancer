@@ -51,12 +51,12 @@ vgg = keras.applications.vgg16.VGG16()
 x = vgg.layers[-4].output
 x = Dropout(0.5)(x)
 x = BatchNormalization()(x)
-x = Dense(1024, activation='tanh')(x)
+x = Dense(1000, activation='tanh')(x)
 x = Dropout(0.5)(x)
 x = BatchNormalization()(x)
 predictions = Dense(1, activation='sigmoid')(x)
 NN_MODEL = Model(inputs=vgg.input, outputs=predictions)
-NN_MODEL.load_weights('./weights_VGG_v1_auc_0.897.h5')
+NN_MODEL.load_weights('./weights_VGG_v7_auc_0.901.h5')
 
 
 ############################################################
