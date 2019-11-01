@@ -109,14 +109,14 @@ X_val = np.array(X_val)
 # Set version to avoid overwirting previous files
 base_name = 'VGG_v'
 version = 0
-while any([bool(re.match(base_name + str(version), x)) for x in os.listdir('.')]):
+while any([bool(re.match(base_name + str(version), x)) for x in os.listdir('../saved_models')]):
     version += 1
 print('version', version)
 
 
 # #### 4.2 Model Constants
 
-# In[22]:
+# In[7]:
 
 
 # Constants
@@ -130,7 +130,7 @@ train_steps = np.ceil(num_train_samples / TRAIN_BATCH_SIZE)
 
 # #### 4.3 Transfer Learning VGG
 
-# In[23]:
+# In[8]:
 
 
 # Load VGG
@@ -143,7 +143,7 @@ vgg = tensorflow.keras.applications.vgg16.VGG16()
 # vgg.summary()
 
 
-# In[25]:
+# In[9]:
 
 
 # Set architecture
@@ -164,7 +164,7 @@ predictions = Dense(1, activation='sigmoid')(x)
 model = Model(inputs=vgg.input, outputs=predictions)
 
 
-# In[26]:
+# In[10]:
 
 
 # Freeze layers
@@ -182,17 +182,17 @@ for layer in model.layers:
 
 # #### 4.5 Callbacks and metrics
 
-# In[28]:
+# In[11]:
 
 
 model.compile(optimizer=optimizers.Adam(),
               loss='binary_crossentropy', metrics=['accuracy', tensorflow.keras.metrics.AUC(name='auc')])
 
 
-# In[29]:
+# In[12]:
 
 
-checkpoint = ModelCheckpoint(base_name + str(version) + '_auc_{val_auc:.3f}.h5', 
+checkpoint = ModelCheckpoint('../saved_models/' + base_name + str(version) + '_auc_{val_auc:.3f}.h5', 
                              monitor='val_auc', mode='max', verbose=1,
                              save_best_only=True, save_weights_only=False)
 
@@ -204,7 +204,7 @@ callbacks_list = [checkpoint, reduce_lr]
 
 # #### 4.6 Train Model
 
-# In[30]:
+# In[13]:
 
 
 datagen = ImageDataGenerator(
@@ -219,7 +219,7 @@ datagen = ImageDataGenerator(
 )
 
 
-# In[17]:
+# In[14]:
 
 
 weights = class_weight.compute_class_weight('balanced', np.unique(y_train), y_train)
@@ -239,6 +239,18 @@ history = model.fit_generator(datagen.flow(X_train, np.array(y_train), batch_siz
                               class_weight=class_weights)
 
 
+# In[20]:
+
+
+# history = model.fit(X_train, np.array(y_train) ),
+#                     batch_size=TRAIN_BATCH_SIZE,
+#                     epochs=NUM_EPOCHS,
+#                     verbose=1,
+#                     callbacks=callbacks_list,
+#                     validation_data=(X_val, np.array(y_val)),
+#                     class_weight=class_weights)
+
+
 # In[19]:
 
 
@@ -253,7 +265,7 @@ _ = plt.xlabel("# Época")
 _ = plt.ylabel("Erro & Acurácia")
 _ = plt.legend(loc="upper right")
 
-plt.savefig(base_name + str(version) + '_learning' + '.png')
+plt.savefig('../saved_models/' + base_name + str(version) + '_learning' + '.png')
 
 
 # ### 3.7 Confusion matrix
@@ -273,5 +285,5 @@ df_cm = pd.DataFrame(cm)
 _ = plt.figure(figsize = (10, 7))
 _ = sn.heatmap(df_cm, annot=True, fmt='d')
 
-plt.savefig(base_name + str(version) + '_confusion_matrix.png')
+plt.savefig('../saved_models/' + base_name + str(version) + '_confusion_matrix.png')
 

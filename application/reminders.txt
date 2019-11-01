@@ -1,0 +1,29 @@
+
+1. Uncomment the request limit
+2. Update requirements.txt
+3. Update the __main__ app.run() arguments
+	app.run(threaded=True, port=5000)
+
+4. runtime.txt
+	python-3.7.4
+	Python has released a security update! Please consider upgrading to python-3.7.5
+
+5. app.yaml
+	runtime: python37
+	env: flex
+	entrypoint: gunicorn -b :$PORT main:app
+
+	runtime_config:
+	  python_version: 3
+
+6. Procfile
+	web: gunicorn app:app
+
+7. source: https://stackoverflow.com/questions/31270989/python-web-application-with-opencv-in-heroku
+
+	heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git --app check-melanoma-heroku
+
+	.buildpacks
+		https://github.com/heroku/heroku-buildpack-python
+		https://github.com/diogojc/heroku-buildpack-python-opencv-scipy#cedar14
+

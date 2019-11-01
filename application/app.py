@@ -12,10 +12,8 @@ import io
 from io import BytesIO
 
 import matplotlib.pyplot as plt
-# import matplotlib
 from PIL import Image, ImageOps
 import numpy as np
-import cv2
 
 import tensorflow as tf
 import keras
@@ -68,9 +66,9 @@ def resize_image(image):
 	delta_w = desired_size - old_size[0]
 	delta_h = desired_size - old_size[1]
 	padding = (delta_w // 2, delta_h // 2, delta_w - (delta_w // 2), delta_h - (delta_h // 2))
-	resized_image = np.asarray(ImageOps.expand(image, padding))
-	resized_image = cv2.resize(resized_image, (224, 224))
-	return resized_image
+	resized_image = ImageOps.expand(image, padding)
+	resized_image = resized_image.resize((224, 224))
+	return np.asarray(resized_image)
 
 
 def allowed_file(filename: str):
