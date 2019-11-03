@@ -3,20 +3,26 @@ TODO
 
 AGORA:
     - Equilibrar imagens de cada shape do melanoma (e das demais também(?)) pelo augmentation.
+        - Testar com 2 ou 3 shapes
     - Refazer VGG_v7 aumentando o augmentation para: 2.000, 800, 1.200, 1.400, 1.600
     - VGG_v7: Verificar doenças que se confundem com melanoma
     
     - Write article
+        - OK: Motivação do trabalho na introdução (Introdução)
+        - OK: Split sem misturar lesões (colocar imagem?)
         - OK: Modelos Baseline
-        - Motivação do trabalho na introdução (Necessidade)
-        - Explicar quais equipamentos geraram as imagens
-        - Explicar que tipo de augmentation foi utilizado (translação, rotação), número de camadas descongeladas, batch size, número de épocas...
+        - OK: Explicar que tipo de augmentation foi utilizado (translação, rotação), número de camadas descongeladas, batch size, número de épocas...
+
+        - Explicar 7 doenças -> classificação binária
+        - Explicar quais equipamentos médicos foram usados para gerar as imagens
+        - Falar da Intel
         - História até chegar onde cheguei (os leaks)
         - Explorar curva ROC AUC
         - Identificar interpretabildiade com casos que acerta, erra, fica na dúvida
         - Comparar Lime e LRP
-        - Sem Augmentation vs com Augmentation: Bump de AUC e qualidade interpretabilidade
         - Efeito de mais Augmentation
+        - Pode ser que cortar as imagens na parte mais relevante seja uma boa opção. Em alguns problemas pode não ser possível
+        - Sem Augmentation vs com Augmentation: Bump de AUC e qualidade interpretabilidade
 
 
 DONE:
