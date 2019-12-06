@@ -2,28 +2,33 @@ TODO
 
 
 AGORA:
-    - Equilibrar imagens de cada shape do melanoma (e das demais também(?)) pelo augmentation.
-        - Testar com 2 ou 3 shapes
-    - Refazer VGG_v7 aumentando o augmentation para: 2.000, 800, 1.200, 1.400, 1.600
-    - VGG_v7: Verificar doenças que se confundem com melanoma
-    
     - Write article
         - OK: Motivação do trabalho na introdução (Introdução)
         - OK: Split sem misturar lesões (colocar imagem?)
         - OK: Modelos Baseline
         - OK: Explicar que tipo de augmentation foi utilizado (translação, rotação), número de camadas descongeladas, batch size, número de épocas...
+        - OK: World melanoma statistics
+        - OK: ABCDE: Medical visual inspection technique
+        - OK: Explicar 7 doenças -> classificação binária
+        - OK: Falar da Intel
+        - OK: Pode ser que cortar as imagens na parte mais relevante seja uma boa opção. Em alguns problemas pode não ser possível
+        - OK: Lentes circulares pode ter viés de pintas pequenas pequenas.
+        - OK: Colocar numero de imagens p/ 1024 x 1024 only
+        - OK: Acertar imagem com título pequeno
+        - OK: Explicar que a tabela está restrita a shapes com mais de 20 exemplos
+        - OK: Resultados / Conclusão / Future Work
+        - OK: Verificar e acertar todas as legendas (Colocar score, shape (?), rótulo/classe, modelo que originou)
+        - OK: Colocar imagem da curva ROC AUC
+        
+        - REMOVER A NORMALIZAÇÃO DA IMAGEM DO LRP
+        - LRP: Deep Taylor
+        - Citar imagens e tabelas e ajustar posicionamento
+        
+        - Mostrar filtro de 70% da importancia total elimina 100% as bordas
 
-        - Explicar 7 doenças -> classificação binária
-        - Explicar quais equipamentos médicos foram usados para gerar as imagens
-        - Falar da Intel
-        - História até chegar onde cheguei (os leaks)
-        - Explorar curva ROC AUC
+        - Falar de uma análise de cluster ou por doença, mostrando as imagens que rede deu scores altos a baixos
         - Identificar interpretabildiade com casos que acerta, erra, fica na dúvida
         - Comparar Lime e LRP
-        - Efeito de mais Augmentation
-        - Pode ser que cortar as imagens na parte mais relevante seja uma boa opção. Em alguns problemas pode não ser possível
-        - Sem Augmentation vs com Augmentation: Bump de AUC e qualidade interpretabilidade
-
 
 DONE:
     - OK: Testar com (450, 600, 3), (1024, 1024, 3), (680, 1024, 3), (768, 1024, 3)
