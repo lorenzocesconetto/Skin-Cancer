@@ -51,3 +51,11 @@ Contributions are what make the open source community such an amazing place to b
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
+[contributors-shield]: https://img.shields.io/badge/contributors-1-brightgreen
+[contributors-url]: https://github.com/lorenzocesconetto/Skin-Cancer/graphs/contributors
+[license-shield]: https://img.shields.io/github/license/Codenation-React/grupo-3
+[license-url]: ./LICENCE
